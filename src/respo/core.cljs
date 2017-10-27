@@ -58,7 +58,7 @@
     (rerender-app! target markup dispatch!)
     (mount-app! target markup dispatch!)))
 
-(defn create-list-element [tag-name props children]
+(defn create-list-element [tag-name props child-map]
   (let [attrs (pick-attrs props)
         styles (if (contains? props :style) (sort-by first (:style props)) (list))
         event (or (:on props) (:event props) {})]
@@ -67,7 +67,7 @@
      :attrs attrs,
      :style styles,
      :event event,
-     :children children}))
+     :children child-map}))
 
 (defn create-comp [comp-name render]
   (comment println "create component:" comp-name)

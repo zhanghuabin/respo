@@ -1,7 +1,7 @@
 
 (ns respo.app.comp.todolist
   (:require [clojure.string :as string]
-            [respo.macros :refer [defcomp div span input <> cursor-> list->]]
+            [respo.macros :refer [defcomp div span input <> cursor-> list-> $]]
             [hsl.core :refer [hsl]]
             [respo.app.comp.task :refer [comp-task]]
             [respo.comp.space :refer [=<]]
@@ -87,7 +87,8 @@
     (if (> (count tasks) 0)
       (div
        {:spell-check true, :style style-toolbar}
-       (div
+       ($
+        :div
         {:style widget/button, :on (if (:locked? state) {} {:click clear-done})}
         (<> "Clear2"))
        (=< 8 nil)

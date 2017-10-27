@@ -45,5 +45,17 @@
   `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'*cursor* ~k)))
 
 (defmacro list-> [tag props children]
-  (assert (keyword? tag) "tag in list-> should be keyword")
-  `(respo.core/create-list-element ~tag ~props ~children))
+  `{:name ~tag,
+    :coord nil,
+    :attrs (respo.util.list/pick-attrs ~props),
+    :style (if (contains? ~props :style) (sort-by first (:style ~props)) (list)),
+    :event (or (:on ~props) {}),
+    :children ~children})
+
+(defmacro $ [tag props & children]
+  `{:name ~tag,
+    :coord nil,
+    :attrs (respo.util.list/pick-attrs ~props),
+    :style (if (contains? ~props :style) (sort-by first (:style ~props)) (list)),
+    :event (or (:on ~props) {}),
+    :children (->> (map-indexed vector ~children) (filter respo.util.list/val-exists?))})
