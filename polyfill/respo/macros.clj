@@ -61,7 +61,7 @@
          attrs# (respo.util.list/pick-attrs props#)
          styles# (if (contains? props# :style) (sort-by first (:style props#)) (list))
          event# (or (:on props#) (:event props#) {})
-         child-map# (respo.util.list/arrange-children-old ~children)]
+         child-map# (respo.util.list/arrange-children-old (list ~@children))]
      {:name ~tag,
       :coord nil,
       :attrs attrs#,
