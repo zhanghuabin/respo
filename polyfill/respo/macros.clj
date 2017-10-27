@@ -44,18 +44,27 @@
 (defmacro cursor-> [k component states & args]
   `(assoc (~component (get ~states ~k) ~@args) :cursor (conj ~'*cursor* ~k)))
 
-(defmacro list-> [tag props children]
-  `{:name ~tag,
-    :coord nil,
-    :attrs (respo.util.list/pick-attrs ~props),
-    :style (if (contains? ~props :style) (sort-by first (:style ~props)) (list)),
-    :event (or (:on ~props) {}),
-    :children ~children})
+(defmacro list-> [tag props child-map]
+  `(let [props# ~props
+         attrs# (respo.util.list/pick-attrs props#)
+         styles# (if (contains? props# :style) (sort-by first (:style props#)) (list))
+         event# (or (:on props#) (:event props#) {})]
+    {:name ~tag,
+     :coord nil,
+     :attrs attrs#,
+     :style styles#,
+     :event event#,
+     :children ~child-map}))
 
 (defmacro $ [tag props & children]
-  `{:name ~tag,
-    :coord nil,
-    :attrs (respo.util.list/pick-attrs ~props),
-    :style (if (contains? ~props :style) (sort-by first (:style ~props)) (list)),
-    :event (or (:on ~props) {}),
-    :children (->> (map-indexed vector ~children) (filter respo.util.list/val-exists?))})
+  `(let [props# ~props
+         attrs# (respo.util.list/pick-attrs props#)
+         styles# (if (contains? props# :style) (sort-by first (:style props#)) (list))
+         event# (or (:on props#) (:event props#) {})
+         child-map# (respo.util.list/arrange-children-old ~children)]
+     {:name ~tag,
+      :coord nil,
+      :attrs attrs#,
+      :style styles#,
+      :event event#,
+      :children child-map#}))
